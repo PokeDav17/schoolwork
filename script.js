@@ -46,3 +46,11 @@ function checkAnswer(answer) {
 
 document.getElementById("restart").addEventListener("click", restartGame);
 displayQuestion();
+
+document.getElementById("yes").addEventListener("click", function() {
+    checkAnswer(true);
+});
+
+document.getElementById("no").addEventListener("click", function() {
+    checkAnswer(false);
+});
