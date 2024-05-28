@@ -34,7 +34,7 @@ function checkAnswer(answer) {
         characterGuess = Object.keys(characters).find(character => {
             const characterAnswers = characters[character];
             for (let i = 0; i < characterAnswers.length; i++) {
-                if (characterAnswers[i] !== answer[i]) {
+                if (characterAnswers[i] !== answer) {
                     return false;
                 }
             }
