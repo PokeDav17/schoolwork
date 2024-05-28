@@ -1,42 +1,48 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+const questions = [
+    "Il personaggio è famoso per i suoi contributi nel campo della scienza?",
+    "Il personaggio è noto per le sue opere nell'ambito della tecnologia?",
+    "Il personaggio è rinomato nell'ambito dell'ingegneria?",
+    "Il personaggio è famoso per i suoi risultati nell'arte?",
+    "Il personaggio è conosciuto nel campo della matematica?"
+];
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBcv2GD5xhGD2E3yUcDSZk58OjRj0FekSo",
-  authDomain: "schoolwork-99aba.firebaseapp.com",
-  projectId: "schoolwork-99aba",
-  storageBucket: "schoolwork-99aba.appspot.com",
-  messagingSenderId: "467119747909",
-  appId: "1:467119747909:web:20ca4cccb83b91b38f442c",
-  measurementId: "G-LMSJ308BW9"
+const characters = {
+    "Albert Einstein": [true, false, false, false, true],
+    "Leonardo da Vinci": [true, true, true, true, true],
+    // Aggiungi altri personaggi con le loro risposte alle domande
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const storage = firebase.storage();
+let currentQuestion = 0;
+let characterGuess = null;
 
+function displayQuestion() {
+    document.getElementById("questions").innerHTML = questions[currentQuestion];
+}
 
-const uploadForm = document.getElementById('upload-form');
-const fileInput = document.getElementById('file-input');
+function restartGame() {
+    currentQuestion = 0;
+    characterGuess = null;
+    displayQuestion();
+    document.getElementById("result").innerHTML = "";
+}
 
-uploadForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const file = fileInput.files[0];
-    const storageRef = storage.ref();
-    const fileRef = storageRef.child(file.name);
-    
-    fileRef.put(file).then(() => {
-        console.log('File uploaded successfully');
-        // Add code to handle success (e.g., display success message)
-    }).catch((error) => {
-        console.error('Error uploading file:', error);
-        // Add code to handle error (e.g., display error message)
-    });
-});
+function checkAnswer(answer) {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        displayQuestion();
+    } else {
+        characterGuess = Object.keys(characters).find(character => {
+            const characterAnswers = characters[character];
+            for (let i = 0; i < characterAnswers.length; i++) {
+                if (characterAnswers[i] !== answer[i]) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        document.getElementById("result").innerHTML = characterGuess ? `Il personaggio è ${characterGuess}!` : "Non sono riuscito a indovinare il personaggio.";
+    }
+}
 
+document.getElementById("restart").addEventListener("click", restartGame);
+displayQuestion();
